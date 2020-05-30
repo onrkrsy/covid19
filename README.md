@@ -1,4 +1,4 @@
-# covid19
+# covid19 Haritası
 Html ve javascript ile korona haritası ve covid19 verilerine ait grafik örnekleri
 projenin html ve javascript olarak hazırlanan ilk versiyonudur daha sonra geliştirilerek 
 https://covid19takip.com
