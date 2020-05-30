@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Korona Haritası - Covid19 Haritası</title>
+  <meta name="description" content="Corona Haritası ve istatistiki bilgiler" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimal-ui" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  <!-- for ios 7 style, multi-resolution icon of 152x152 -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-barstyle" content="black-translucent">
+  <link rel="apple-touch-icon" href="images/logo-corona.png">
+  <meta name="apple-mobile-web-app-title" content="Flatkit">
+  <!-- for Chrome on Android, multi-resolution icon of 196x196 -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <link rel="shortcut icon" sizes="196x196" href="images/logo-corona.png">
+  
+  <!-- style -->
+  <link rel="stylesheet" href="css/animate.css/animate.min.css" type="text/css" />
+  <link rel="stylesheet" href="css/glyphicons/glyphicons.css" type="text/css" />
+  <link rel="stylesheet" href="css/font-awesome/css/font-awesome.min.css" type="text/css" />
+  <link rel="stylesheet" href="css/material-design-icons/material-design-icons.css" type="text/css" />
+  <link rel="stylesheet" href="css/ionicons/css/ionicons.min.css" type="text/css" />
+  <link rel="stylesheet" href="css/simple-line-icons/css/simple-line-icons.css" type="text/css" />
+  <link rel="stylesheet" href="css/bootstrap/dist/css/bootstrap.min.css" type="text/css" />
+
+  <!-- build:css css/styles/app.min.css -->
+  <link rel="stylesheet" href="css/styles/app.css" type="text/css" />
+  <link rel="stylesheet" href="css/styles/style.css" type="text/css" />
+  <!-- endbuild -->
+  <link rel="stylesheet" href="css/styles/font.css" type="text/css" />
+
+<style>
+.fs-med { font-size: 20pt;}
+.lbl-ti { font-weight: bolder;; }
+.lbl-tn {  display:block;font-size:20px;}
+.divCountryList { position: relative;}
+.ajax_partloader {
+ 
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(16,24,35,0.6);
+    z-index: 2000; 
+    text-align: center;
+    width: 100%;
+}
+.ajax_partloader img {
+    top: 45%;
+    position: relative;
+    width: 80px;
+}
+.txt-small { font-size: 10px;}
+@media (min-width: 992px) {
+  .app-aside {
+    display: block !important; }
+    .app-aside,
+    .app-aside .scroll {
+      width: 15.5rem; }
+	 .app-aside:not(.hide) ~ .app-content {
+    margin-left: 15.5rem;
+    left: 15.5rem;
+}
+}
+.list-group-item.active {
+  background: #4a4a4a; 
+}
+
+</style>
+
+
+</head>
+<body class="pace-done black">
+  <div class="app" id="app">
+
+<!-- ############ LAYOUT START-->
+
+  <!-- aside -->
+  <div id="aside" class="app-aside fade nav-dropdown black">
+    <!-- fluid app aside -->
+    <div class="navside dk" data-layout="column" id="divCountryList">
+      <div class="navbar no-radius text-center">
+        <!-- brand -->
+        <a href="#" class="navbar-brand">
+         
+        	<img src="images/logo-corona.png" alt="."> 
+        	<span class="hidden-folded inline">Covid-19 </span>
+        </a>
+        <!-- / brand -->
+	  </div>
+	  <div class="block _500 text-center">
+					
+		<div class="orange p-y-xs p-x-xs"> 
+			<span class="lbl-ti"> Toplam Vaka</span>
+			<span class="lbl-tn" id="spnTotalCase">-</span>  
+	  </div>
+	  <div class="light-green p-y-xs p-x-xs"> 
+		<span class="lbl-ti"> Toplam Tedavi Edilen</span>
+		<span class="lbl-tn" id="spnTotalRecovered">-</span>  
+  </div>
+  <div class="red p-y-xs p-x-xs"> 
+	<span class="lbl-ti"> Toplam Ölüm</span>
+	<span class="lbl-tn" id="spnTotalDeath">-</span>  
+  </div>
+  </div>
+  <div class="input-group">
+    <input type="text" class="form-control form-control-sm search" placeholder="Ülke Ara" >
+    <span class="input-group-btn">
+        <button class="btn btn-xs btn-icon " data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Ölüm Sayısına Göre Sırala">
+        <i class="fa fa-circle sort text-danger" data-sort="deathCount"></i>
+        </button>
+        <button class="btn btn-xs btn-icon "  data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Tedavi Olan Sayısına Göre Sırala">
+        <i class="fa fa-circle sort text-success" data-sort="recoveredCount"></i>
+        </button><button class="btn btn-xs btn-icon  "  data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Toplam Vaka Sayısına Göre Sırala">
+        <i class="fa fa-circle sort text-warning" data-sort="confirmedCount"></i>
+        </button>
+    </span>
+  </div>
+    <div data-flex class="hide-scroll divCountryList" >
+      
+
+  
+      <div>
+          <div class="ajax_partloader"> <img src="images/ajx.svg"> </div>
+          <nav class="scroll nav-stacked nav-stacked-rounded nav-color">
+      
+
+      <ul id="countryList" class="list-group m-b countryList">
+        
+        </ul>
+          </nav>
+      </div>
+    </div>
+
+
+      <div data-flex-no-shrink>
+        <div class="nav-fold dropup">
+          <a data-toggle="dropdown">
+              <div class="pull-left">
+                <div class="inline"><span class="avatar w-40 grey">C-19</span></div>
+                <img src="images/a0.jpg" alt="..." class="w-40 img-circle hide">
+              </div>
+              <div class="clear hidden-folded p-x">
+				<span class="block _500 text-muted">Covid-19</span>
+				<div>Haritası</div>
+           
+              </div>
+          </a>
+          <div class="dropdown-menu w dropdown-menu-scale ">
+            <a class="dropdown-item" href="#">
+              <span>Hakkında</span>
+            </a>
+			<a class="dropdown-item" href="#">
+				<span>Hata Bildir</span>
+			</a> 
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- / -->
+  
+  <!-- content -->
+  <div id="content" class="app-content box-shadow-z2 bg pjax-container" role="main">
+    <div class="app-header white bg b-b">
+          <div class="navbar" data-pjax>
+                <a data-toggle="modal" data-target="#aside" class="navbar-item pull-left hidden-lg-up p-r m-a-0">
+                  <i class="ion-navicon"></i>
+                </a>
+                <div class="navbar-item pull-left h5" id="pageTitle">Korona Haritası </div>
+                <!-- nabar right -->
+             
+                <!-- / navbar right -->
+          </div>
+    </div>
+    <div class="app-footer white bg p-a b-t">
+      <div class="pull-right text-sm text-muted">Version 1.0.1</div>
+      <span class="text-sm text-muted">&copy; Copyright.</span>
+    </div>
+    <div class="app-body">
+
+<!-- ############ PAGE START-->
+<div class="row-col">
+	<div class="col-lg b-r">
+		<div class="padding">
+			<div class="row">
+		
+			  <div class="col-sm-12">
+				<div class="box">
+				  <div class="box-header">
+		 
+				  </div>
+				  <div class="box-body">
+					<div id="mainMap"  style="height:450px" >
+					</div>
+				  </div>
+				  <div id='countryDatasBlock'></div>
+				</div>
+			  </div>
+		
+			</div>
+		</div>
+		
+		<div class="padding" >
+			<div class="row">
+			    <div class="col-sm-6">
+			        <div class="box">
+			          <div class="box-header">
+			            <h3 class="hCountryName">TÜRKİYE</h3>
+			            <small>Gözlemenen vaka, ölüm ve iyileşme sayıları</small>
+			          </div>
+			          <div class="box-tool">
+				    
+				      </div>
+				      	<div id='chchartGetStatus'>
+							<canvas id="chartGetStatus"  height="340">
+							</canvas>
+				      	</div>
+				       
+			        </div>
+			    </div>
+			    <div class="col-sm-6">
+			    	<div class="box">
+			          <div class="box-header">
+			            <h3><span class="hCountryName">TÜRKİYE</span> - Karşılaştırma (<span class='hFilterName'>Toplam Vaka Sayısı</span>)</h3>
+			            <small>Seçili olan ülkenin diğer ülkelerle karşılaştırılması</small>
+			          </div>
+			          <div class="box-tool">
+				        <ul class="nav"> 
+				          <li class="nav-item inline dropdown">
+				            <a class="nav-link" data-toggle="dropdown">
+				              <i class="ion-android-menu m-x-xs"></i>
+				            </a>
+				            <div class="dropdown-menu dropdown-menu-scale pull-right">
+				              <a class="dropdown-item afilter"   data-filter="confirmed">Toplam Vaka</a>
+				              <a class="dropdown-item afilter"   data-filter="recovered">Tedavi Edilen Vaka</a>
+				              <a class="dropdown-item afilter"   data-filter="deaths">Ölümcül Vaka</a> 
+				            </div>
+				          </li>
+				        </ul>
+				      </div>
+				        <div id='chchartCompare'>
+							<canvas id="chartCompare"  height="340">
+							</canvas>
+				      	</div>
+				        
+			        </div>
+			    </div> 
+			</div>
+      <div>
+        <div class="row">
+          <div class="col-md-6">
+            <div class="box">
+              <div class="box-header">
+                <h3 class="hCountryName">TÜRKİYE</h3>
+                <small>Ölüm Oranları Karşılaştırması</small>
+              </div>
+              <div class="box-tool">
+          
+            </div>
+              <div id='chchartDeathRates'>
+            <canvas id="chartDeathRates"  height="340">
+            </canvas>
+              </div>
+             
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="box">
+              <div class="box-header">
+                <h3 class="hCountryName">TÜRKİYE</h3>
+                <small>Tedavi Edilme Oranları Karşılaştırması</small>
+              </div>
+              <div class="box-tool">
+          
+            </div>
+              <div id='chchartRecoveredRates'>
+            <canvas id="chartRecoveredRates"  height="340">
+            </canvas>
+              </div>
+             
+            </div> 
+          </div>
+        </div>
+        
+        
+        
+        </div>
+	        
+		</div>
+	</div>
+	<div class="col-lg w-lg w-auto-md white bg">
+		<div>
+			<div class="p-a">
+				<h6 class="text-muted m-a-0">Twitter Posts</h6>
+			</div>
+			<div class="list inset">
+				<a class="twitter-timeline" data-lang="tr" data-height="900" data-theme="dark" href="https://twitter.com/drfahrettinkoca?ref_src=twsrc%5Etfw">Tweets by drfahrettinkoca</a> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+			 </div>	
+        </div>
+	</div>
+</div>
+<span id="selectedCountry" data-countryName="Türkiye" data-countryCode="turkey"></span>
+
+  <div class="modal-right w-xxl dark-white b-l">
+  	  
+  </div>
+</div>
+
+<!-- ############ PAGE END-->
+
+    </div>
+  </div>
+  <!-- / -->
+
+
+
+<!-- ############ LAYOUT END-->
+  </div>
+
+<!-- build:js scripts/app.min.js -->
+<!-- jQuery -->
+  <script src="libs/jquery/dist/jquery.js"></script>
+<!-- Bootstrap -->
+  <script src="libs/tether/dist/js/tether.min.js"></script>
+  <script src="libs/bootstrap/dist/js/bootstrap.js"></script>
+<!-- core -->
+  <script src="libs/jQuery-Storage-API/jquery.storageapi.min.js"></script>
+  <script src="libs/PACE/pace.min.js"></script>
+  <script src="libs/jquery-pjax/jquery.pjax.js"></script>
+  <script src="libs/blockUI/jquery.blockUI.js"></script>
+  <script src="libs/jscroll/jquery.jscroll.min.js"></script>
+  <script src="scripts/list.min.js"></script>
+  <script src="scripts/config.lazyload.js"></script>
+  <script src="scripts/ui-load.js"></script>
+  <script src="scripts/ui-jp.js"></script>
+  <script src="scripts/ui-include.js"></script>
+  <script src="scripts/ui-device.js"></script>
+  <script src="scripts/ui-form.js"></script>
+  <script src="scripts/ui-modal.js"></script>
+  <script src="scripts/ui-nav.js"></script>
+  <script src="scripts/ui-list.js"></script>
+  <script src="scripts/ui-screenfull.js"></script>
+  <script src="scripts/ui-scroll-to.js"></script>
+  <script src="scripts/ui-toggle-class.js"></script>
+  <script src="scripts/ui-taburl.js"></script>
+  <script src="scripts/app.js"></script>
+  <script src="scripts/ajax.js"></script>
+
+<!--Customs-->
+  <script src="libs/echarts/build/dist/echarts-all.js"></script>
+	<script src="libs/echarts/build/dist/jquery.echarts.js"></script>
+	<script src="libs/chart.js/dist/Chart.bundle.min.js"></script>
+	<script src="https://momentjs.com/downloads/moment-with-locales.js"></script>
+  <script src="scripts/custom.js"></script>
+<!-- endbuild -->
+
+</body>
+</html>
